@@ -5,7 +5,7 @@
 # ChangeLog (Who,When,What):
 # RRoot,1.1.2030,Created started script
 # RRoot,1.1.2030,Added pseudo-code to start assignment 8
-# <Your Name>,<Today's Date>,Modified code to complete assignment 8
+# jtlarson,08.30.2022,Modified code to complete assignment 8
 # ------------------------------------------------------------------------ #
 import pickle # used for saving list
 import os # used by read_data_from_file function
@@ -46,7 +46,7 @@ class Product:
         if str(value).isascii() == True:
             self.__product_name_str = value
         else:
-            raise Exception("Is that the best name you can come up with? (should be ascii)")
+            raise Exception("I don't speak that language. (should be ascii)")
 
     # product_price
     @property
@@ -125,9 +125,17 @@ class FileProcessor:
         :return: (list) of saved product objects
         """
         # Open the file and pickle the 'sandwich' list
-        file = open(file_name, "wb")
-        pickle.dump(product_list,file)
-        file.close()
+        try:
+            file = open(file_name, "wb")
+            pickle.dump(product_list,file)
+            file.close()
+        except Exception as e:
+            print(e)
+            print(type(e))
+            print(e.__doc__)
+            print(e.__str__())
+            IO.output_message(message="file_write_error", data=os.getcwd())
+            exit()
         return product_list
 # Processing  ------------------------------------------------------------- #
 
@@ -182,18 +190,18 @@ class IO:
         :param product_list: (list) of products
         :return: nothing
         """
-        if lstOfProductObjects:  # if there are any toppings
-            max_product_chars = 0  # the length of the prod
+        if lstOfProductObjects:  # if there are any products
+            max_product_chars = 0  # the length of the product name
             # Find the longest task name
             for item in lstOfProductObjects:
                 if len(item.product_name) > max_product_chars:
                     max_product_chars = len(item.product_name)
             # Display product list between === sized to fit
-            print(" " * 7, "Product", " " * (max_product_chars - 7), "|", "Price")
+            print(" " * 7, "Product", " " * (max_product_chars - 7), "$", "Price")
             print(" " * 7, "-" * (max_product_chars + 9))
             for item in lstOfProductObjects:
-                print(" " * 7, item.product_name, \
-                      " " * (max_product_chars - len(item.product_name)), "|", item.product_price)
+                print(" " * 7, item.product_name,
+                      " " * (max_product_chars - len(item.product_name)), "$", item.product_price)
             print()
 
     # TODO: Add code to get product data from user
@@ -284,5 +292,5 @@ while True:
     else:
         IO.output_message("unknown")
         continue
-#exit
 # Main Body of Script  ---------------------------------------------------- #
+#exit
